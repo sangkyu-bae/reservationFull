@@ -1,0 +1,111 @@
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<header>
+   
+    <style>
+    h2 {
+    text-align: center
+}
+
+h2,
+h4 {
+    margin: 0px;
+}
+
+.tab {
+    width: 600px;
+    margin: 0px auto;
+}
+
+.tabmenu {
+    background-color: bisque;
+}
+
+.tabmenu>div {
+    display: inline-block;
+    width: 145px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.content {
+    padding: 5%;
+    background-color: antiquewhite;
+}
+</style>
+</header>
+
+    <h2> TAB UI TEST</h2>
+
+    <div class="tab">
+        <!-- <div class="tabmenu">
+            <div>crong</div>
+            <div>jk</div>
+            <div>pobi</div>
+            <div>honux</div>
+        </div> -->
+
+        <div class="tabmenu">
+            <div>전체리스트</div>
+            <div>전시</div>
+            <div>뮤지컬</div>
+            <div>콘서트</div>
+            <div>클래식</div>
+            <div>연극</div>
+        </div>
+        <!-- <section class="content">
+            <h4>hello jk</h4>
+            <p>golf, facebook</p>
+        </section> -->
+        <section class="content">
+          <h4>hello jk</h4>
+          <p class="event_lst_txt">바로 예매 가능한 행사가 <span class="pink">10개</span> 있습니다</p>
+        </section>
+    </div>
+    <script>
+
+        function makeTemplate(data, clickedName) {
+        	var hh=data['items'];
+            var html = document.getElementById("tabcontent").innerHTML;
+            var resultHTML = "";
+
+            for (var i = 0; i < hh.length; i++) {
+                if (hh[i].name === clickedName) {
+                    resultHTML = html.replace("{name}", hh[i].name)
+                        .replace("{count}", hh[i].count);
+                    break;
+                }
+            }
+            document.querySelector(".content").innerHTML = resultHTML;
+        }
+
+        function sendAjax(url, clickedName) {
+            var oReq = new XMLHttpRequest();
+            oReq.open("GET", url);
+            oReq.responseType='json';
+            oReq.send();
+            oReq.addEventListener("load", function () {
+                var data = oReq.response;
+                makeTemplate(data, clickedName);
+            });
+          
+        }
+
+        var tabmenu = document.querySelector(".tabmenu");
+        tabmenu.addEventListener("click", function (evt) {
+        	console.log(evt.target.innerText);
+            sendAjax("http://localhost:8080/reserproject/api/categories", evt.target.innerText);
+        });
+    </script>
+
+    <script id="tabcontent" type="my-template">
+            <h4>hello {name}</h4>
+            <p>바로 예매 가능한 행사가 {count}개 있습니다</p>
+       </script>
+</body>
+
+</html>
